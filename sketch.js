@@ -18,6 +18,7 @@ function setup() {
   gui = createGui();
   createGuiElements();
   blob = new Blob(width/2, height/2 - 60, 30);
+  blob.addRings();
 }
 
 function draw() {
@@ -36,9 +37,9 @@ function draw() {
     fill(255);
     text('test test test test', 40, windowHeight - 200)
     drawGui();
-
   }
 
+  // End character creation
   if (skipButton.isPressed) {
     if (lvl < attributes) {
       lvl += 1;
@@ -46,9 +47,19 @@ function draw() {
       layerSlider.val = lvl;
     } else {
       scene = 1;
-      blob.y += 60;
-      blob.r += 10;
+      blob.x = windowWidth/2;
+      blob.y = windowHeight/2;
+      rSlider.val += 30;
     }
+  }
+
+  // Main stage
+
+  // Isometric stage
+  if (scene == 2) {
+    blob.x = windowWidth/4;
+    blob.y = windowHeight/2;
+    rSlider.val = 30;    
   }
 
 }
@@ -60,7 +71,6 @@ class Player{
     this.keyIndex = 0;
     this.currentLayer;
   }
-
 
 }
 
