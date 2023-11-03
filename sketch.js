@@ -1,9 +1,4 @@
-// Inspired in Daniel Shiffman's code:
-// https://www.youtube.com/watch?v=ZI1dmHv3MeM&ab_channel=TheCodingTrain
-
-// Create a variable for the gui context that we can use to change style
 let gui;
-
 let blob;
 let rSlider;
 let blolbSlider;
@@ -21,15 +16,7 @@ let scene = 0;
 function setup() {
   createCanvas(windowWidth, windowHeight);
   gui = createGui();
-
-  rSlider = createSlider('Radius', windowWidth - sliderW - 20, 20, sliderW, sliderH, 10, 80);
-  rSlider.val = 20;
-  layerSlider = createSlider('Layers', windowWidth - sliderW - 20, 20 + sliderH, sliderW, sliderH, 1, 30);
-  layerSlider.val = 1;
-
-  skipButton = createButton('Next', windowWidth - buttonW - 40, windowHeight - 40 - buttonH, buttonW, buttonH);
-
-
+  createGuiElements();
   blob = new Blob(width/2, height/2 - 60, 30);
 }
 
@@ -64,4 +51,23 @@ function draw() {
     }
   }
 
+}
+
+class Player{
+  constructor(blob){
+    this.blob = new Blob();
+    this.blob = blob;
+    this.keyIndex = 0;
+    this.currentLayer;
+  }
+
+
+}
+
+function createGuiElements(){
+  rSlider = createSlider('Radius', windowWidth - sliderW - 20, 20, sliderW, sliderH, 10, 80);
+  rSlider.val = 20;
+  layerSlider = createSlider('Layers', windowWidth - sliderW - 20, 20 + sliderH, sliderW, sliderH, 1, 30);
+  layerSlider.val = 1;
+  skipButton = createButton('Next', windowWidth - buttonW - 40, windowHeight - 40 - buttonH, buttonW, buttonH);
 }
