@@ -13,6 +13,11 @@ class Blob {
     this.blobiness = 20;
     this.layers = 1;
     this.rings = [];
+    this.player = new Player(20)
+    this.xCount = 0
+    this.yCount = 0
+    this.keyIndex = 0
+    this.currentRing = 0;
   }
 
   addLayer(radius) {
@@ -29,6 +34,7 @@ class Blob {
   }
 
   draw() {
+    
     push();
     translate(this.x, this.y);
     fill(222, 239, 231, 15);
@@ -49,8 +55,31 @@ class Blob {
       this.rings[i].phase += this.phaseRate;
       this.rings[i].zoff += this.zoffRate;
       this.rings[i].display();
+      
     }
-
+    this.xCount = this.rings[this.currentRing].xCoordinates.length
+    this.yCount = this.rings[this.currentRing].yCoordinates.length
+    
+  if(keyIsDown(LEFT_ARROW)){
+      if(this.keyIndex>0){
+        this.keyIndex--
+        
+      }
+      else{
+        this.keyIndex = this.xCount-1
+      }
+      
+    }
+    if(keyIsDown(RIGHT_ARROW)){
+      if(this.keyIndex<this.xCount-1){
+        this.keyIndex++;
+      }
+      else{
+        this.keyIndex = 0
+      }
+      
+    }
+    this.player.display(this.rings[currentRing],this.keyIndex)
     pop();
   }
 }
@@ -60,7 +89,6 @@ class Ring {
     this.radius = radius;
     this.xCoordinates = [];
     this.yCoordinates = [];
-
     this.angryLevel = 0;
     this.maxNoise = 2 + this.angryLevel * 9;
     this.phase = 0;
@@ -69,6 +97,7 @@ class Ring {
     this.zoff = 0;
     this.zoffRate = 0.01;
     this.blobiness = 20;
+    
   }
 
   display() {
@@ -97,5 +126,23 @@ class Ring {
     }
     endShape(CLOSE);
     pop();
+    
+    
   }
+    
+}
+
+class Player{
+  constructor(playerSize){
+   this.playerSize = playerSize;
+  }
+
+  display(ring,keyIndex){
+    push()
+    translate(this.x,this.y)
+    fill(255)
+    ellipse(ring.xCoordinates[keyIndex],ring.yCoordinates[keyIndex],this.playerSize);
+    pop()
+  }
+
 }
