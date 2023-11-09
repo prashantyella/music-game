@@ -24,6 +24,11 @@ class Blob {
     this.ringDistance = 10;
     this.rings = [];
     this.paths = [];
+    this.player = new Player(20)
+    this.xCount = 0
+    this.yCount = 0
+    this.keyIndex = 0
+    this.currentRing = 0;
   }
 
   addPaths(n) {
@@ -44,6 +49,7 @@ class Blob {
       );
       this.paths.push(newPath);
     }
+
   }
 
   addLayer(radius) {
@@ -64,6 +70,7 @@ class Blob {
   }
 
   draw() {
+    
     push();
     translate(this.x, this.y);
     fill(222, 239, 231, 15);
@@ -91,6 +98,7 @@ class Blob {
       this.rings[i].phase = this.phase;
       this.rings[i].zoff = this.zoff;
       this.rings[i].display();
+      
     }
 
     // Update shape of each path
@@ -98,6 +106,29 @@ class Blob {
       this.paths[i].display();
     }
 
+    this.xCount = this.rings[this.currentRing].xCoordinates.length
+    this.yCount = this.rings[this.currentRing].yCoordinates.length
+    
+  if(keyIsDown(LEFT_ARROW)){
+      if(this.keyIndex>0){
+        this.keyIndex--
+        
+      }
+      else{
+        this.keyIndex = this.xCount-1
+      }
+      
+    }
+    if(keyIsDown(RIGHT_ARROW)){
+      if(this.keyIndex<this.xCount-1){
+        this.keyIndex++;
+      }
+      else{
+        this.keyIndex = 0
+      }
+      
+    }
+    this.player.display(this.rings[currentRing],this.keyIndex)
     pop();
   }
 }
@@ -140,7 +171,6 @@ class Ring {
     this.radius = radius;
     this.xCoordinates = [];
     this.yCoordinates = [];
-
     this.angryLevel = 0;
     this.maxNoise = 2 + this.angryLevel * 9;
     this.phase = phase;
@@ -149,6 +179,7 @@ class Ring {
     this.zoff = zoff;
     this.zoffRate = 0.01;
     this.blobiness = 20;
+    
   }
 
   display() {
@@ -180,5 +211,23 @@ class Ring {
     }
     endShape(CLOSE);
     pop();
+    
+    
   }
+    
+}
+
+class Player{
+  constructor(playerSize){
+   this.playerSize = playerSize;
+  }
+
+  display(ring,keyIndex){
+    push()
+    translate(this.x,this.y)
+    fill(255)
+    ellipse(ring.xCoordinates[keyIndex],ring.yCoordinates[keyIndex],this.playerSize);
+    pop()
+  }
+
 }

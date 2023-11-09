@@ -5,6 +5,9 @@ let blolbSlider;
 let noiseSlider;
 let layerSlider;
 let skipButton;
+let player;
+let currentRing = 0;
+let keyIndex = 0;
 let sliderW = 200;
 let sliderH = 32;
 let buttonW = 100;
@@ -21,6 +24,8 @@ function setup() {
   createGuiElements();
   blob = new Blob(width/2, height/2 - 60, 20);
   blob.addRings();
+ 
+
 }
 
 function draw() {
@@ -32,8 +37,9 @@ function draw() {
 
   blob.radius = rSlider.val;
   blob.layers = layerSlider.val;
+  //console.log("key index: ", keyIndex, "xCount:",blob.xCount)
   blob.draw();
-
+  
 
   if (scene == 0) {
     rect(20, windowHeight - 240, windowWidth - 40, 220, 10);
@@ -49,33 +55,30 @@ function draw() {
       console.log('lvl: ', lvl);
       layerSlider.val = lvl;
     } else {
+      
       scene = 1;
       blob.x = windowWidth/2;
       blob.y = windowHeight/2;
       rSlider.val += 30;
     }
+    
   }
-
+  
+  
   // Main stage
 
   // Isometric stage
   if (scene == 2) {
+    
     blob.x = windowWidth/4;
     blob.y = windowHeight/2;
     rSlider.val = 30;    
+    
   }
 
 }
 
-class Player{
-  constructor(blob){
-    this.blob = new Blob();
-    this.blob = blob;
-    this.keyIndex = 0;
-    this.currentLayer;
-  }
 
-}
 
 function createGuiElements(){
   rSlider = createSlider('Radius', windowWidth - sliderW - 20, 20, sliderW, sliderH, 10, 80);
@@ -84,3 +87,5 @@ function createGuiElements(){
   layerSlider.val = 1;
   skipButton = createButton('Next', windowWidth - buttonW - 40, windowHeight - 40 - buttonH, buttonW, buttonH);
 }
+
+
