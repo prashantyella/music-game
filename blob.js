@@ -42,6 +42,7 @@ class Blob {
     // Generate n pairs of numbers
     for (let i = 0; i < n; i++) {
       ringIndexes = getSample(2, this.layers);
+      ringIndexes.sort();
       newPath = new Path(
         this.rings[ringIndexes[0]],
         this.rings[ringIndexes[1]],
@@ -120,13 +121,39 @@ class Blob {
         this.keyIndex = 0;
       }
     }
-
+    if (keyIsDown(UP_ARROW)) {
+      console.log("Up Arrow Pressed")
+      for(var i=0;i< this.paths.length;i++){
+       
+        if(this.rings[this.currentRing].xCoordinates[this.keyIndex]==this.paths[i].startRing.xCoordinates[this.paths[i].index]&&this.currentRing==this.paths[i].startRing.id-1){
+          
+          this.currentRing = this.paths[i].endRing.id-1
+          break
+        }
+      }
+      
+    }
+    if (keyIsDown(DOWN_ARROW)) {
+       
+       console.log("Down Arrow Pressed")
+       for(var i=0;i< this.paths.length;i++){
+       
+        if(this.rings[this.currentRing].xCoordinates[this.keyIndex]==this.paths[i].endRing.xCoordinates[this.paths[i].index]&&this.currentRing==this.paths[i].endRing.id-1){
+          
+          this.currentRing = this.paths[i].startRing.id-1
+          break
+        }
+      }
+    }
     if (scene > 0) {
-      this.player.display(this.rings[currentRing], this.keyIndex);
+      this.player.display(this.rings[this.currentRing], this.keyIndex);
     }
     pop();
   }
+
 }
+
+
 
 class Path {
   // idea: add offset +/- x and y coordinates to add wiggle to the crack
