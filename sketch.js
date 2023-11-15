@@ -32,7 +32,7 @@ function setup() {
   mountain = new Mountain(0);
   gui = createGui();
   createGuiElements();
-  blob = new Blob(width / 2, height / 2 - 60, 20);
+  blob = new Blob(width / 2, height / 2 - 60, 50);
   blob.addRings();
 }
 
@@ -43,8 +43,8 @@ function draw() {
   fill(255, 70);
   textSize(34);
 
-  blob.radius = rSlider.val;
-  blob.layers = layerSlider.val;
+  //blob.radius = rSlider.val;
+  blob.layers = lvl;
   //console.log("key index: ", keyIndex, "xCount:",blob.xCount)
   blob.draw();
 
@@ -58,7 +58,6 @@ function draw() {
   if (scene == 2) {
     blob.x = windowWidth / 4;
     blob.y = windowHeight / 2;
-    rSlider.val = 30;
   }
 }
 

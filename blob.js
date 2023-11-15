@@ -21,7 +21,7 @@ class Blob {
     this.zoffRate = 0.01;
     this.blobiness = 20;
     this.layers = 1;
-    this.ringDistance = 10;
+    this.ringDistance = 40;
     this.rings = [];
     this.paths = [];
     this.player = new Player(9);

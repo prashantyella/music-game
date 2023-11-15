@@ -36,13 +36,13 @@ function characterCreation() {
     if (lvl < attributes) {
       lvl += 1;
       console.log("lvl: ", lvl);
-      layerSlider.val = lvl;
+      //layerSlider.val = lvl;
     } else {
       // End character creation
       scene = 1;
       blob.x = windowWidth / 2;
       blob.y = windowHeight / 2;
-      rSlider.val += 30;
+      //rSlider.val += 30;
     }
   }
 }
