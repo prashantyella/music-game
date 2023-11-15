@@ -1,0 +1,42 @@
+{
+  "question1": {
+    "content": "Where would you go for a romantic first date?",
+    "answers": {
+      "creativity": "Museum",
+      "optimism": "Bathroom",
+      "ambition": "City Hall",
+      "empathy": "Park",
+      "humor": "Graveyard"
+    }
+  },
+  "question2": {
+    "content": "Pick a dessert",
+    "answers": {
+      "creativity": "Peanut butter and jelly ice cream sundae with little sparkles on top",
+      "optimism": "Tiramisu",
+      "ambition": "Steak",
+      "empathy": "Creme Brulee",
+      "humor": "Sahara"
+    }
+  },
+    "question3": {
+    "content": "What’s your favorite season?",
+    "answers": {
+      "creativity": "Summer",
+      "optimism": "Spring",
+      "ambition": "Season 3",
+      "empathy": "Fall",
+      "humor": "Paprika"
+    }
+  },
+    "question4": {
+    "content": "What is worse?",
+    "answers": {
+      "creativity": "US healthcare",
+      "optimism": "Cauliflower",
+      "ambition": "Monarchies",
+      "empathy": "Discrimination",
+      "humor": "Hitting your pinky toe on the corner of a table"
+    }
+  }
+}
