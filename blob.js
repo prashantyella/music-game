@@ -144,12 +144,14 @@ class Path {
     let endX = this.endRing.xCoordinates[this.index];
     let endY = this.endRing.yCoordinates[this.index];
 
+    push();
     stroke(255);
-    strokeWeight(2);
+    strokeWeight(this.thickness);
     beginShape(LINES);
     vertex(startX, startY);
     vertex(endX, endY);
     endShape();
+    pop();
   }
 }
 
