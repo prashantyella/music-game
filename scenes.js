@@ -1,14 +1,14 @@
 function characterCreation() {
   fill(255);
   text(lvl, 40, 50);
+  push();
   fill(100);
-  rect(20, windowHeight - 240, windowWidth - 40, 220, 10);
-
-  fill(255);
+  rect(20, windowHeight - 280, windowWidth - 40, 280, 10);
+  pop();
   let question = questions["question" + lvl];
   let answers = question["answers"];
 
-  text(question["content"], 40, windowHeight - 200);
+  text(question["content"], 40, windowHeight - 240);
 
   let i = 0;
   let answerButton;
@@ -16,19 +16,11 @@ function characterCreation() {
     //text(`${answers[answer]}`, 200 * i, windowHeight - 140);
     answerButton = createButton(
       answers[answer],
-      100 + 200 * i,
-      windowHeight - 100 - buttonH
+      40,
+      windowHeight - 60 - buttonH * i
     );
     i += 1;
   }
-
-  /*   createButton(
-    "Next",
-    windowWidth - buttonW - 40,
-    windowHeight - 40 - buttonH,
-    buttonW,
-    buttonH
-  ); */
 
   drawGui();
 
@@ -36,7 +28,9 @@ function characterCreation() {
     if (lvl < attributes) {
       lvl += 1;
       console.log("lvl: ", lvl);
-      //layerSlider.val = lvl;
+      fill(100);
+      rect(20, windowHeight - 280, windowWidth - 40, 280, 10);
+      pop();
     } else {
       // End character creation
       scene = 1;

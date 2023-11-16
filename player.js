@@ -6,6 +6,7 @@ class Player {
     this.optimism = 0;
     this.ambition = 0;
     this.creativity = 0;
+    this.hp = 100;
   }
 
   display(ring, keyIndex) {
