@@ -29,6 +29,10 @@ class Blob {
     this.yCount = 0;
     this.keyIndex = 0;
     this.currentRing = 0;
+    this.healthMax = 100;
+    this.healthLvl = 100;
+    this.regenRate = 0.5; 
+
   }
 
   addPaths(n) {
@@ -147,13 +151,45 @@ class Blob {
     }
     if (scene > 0) {
       this.player.display(this.rings[this.currentRing], this.keyIndex);
+
+      //health bar
+      if(this.currentRing>0){
+        
+        this.regenRate = -this.currentRing*(0.05);
+      }
+      else{
+        this.regenRate = 0.1;
+      }
+      if(this.healthLvl>0){
+
+        push();
+        noFill();
+        stroke(255);
+        rect(500,-300,this.healthMax,20)
+        pop();
+        push()
+        noStroke()
+        fill(144,238,144)
+        this.healthLvl += this.regenRate;
+        this.healthLvl = min(this.healthMax,this.healthLvl)
+        if(this.healthLvl<20){
+          fill(216,34,41)
+          //this.regenRate = -this.currentRing*(0.001);
+        }
+        console.log("Health level:",this.healthLvl)
+        rect(500,-300,this.healthLvl,20)
+        pop()
+      }
+      else{
+        noLoop();
+        //stop or reset game here
+      }
+
     }
     pop();
   }
 
 }
-
-
 
 class Path {
   // idea: add offset +/- x and y coordinates to add wiggle to the crack
