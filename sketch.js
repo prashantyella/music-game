@@ -12,18 +12,18 @@ let sliderW = 200;
 let sliderH = 32;
 let buttonW = 100;
 let buttonH = 40;
-let lvl = 1;
-let maxLvl = 5;
+let currentLvl = 1;
+let ringsPerLvl = 5;
 let attributes;
 let scene = 0;
-let mountain;
 let questions;
 let buttons = [];
+let score = 0;
+let goalNumber = 3;
 let introAmbiences;
 let currentAmbience;
 let characterSoundtracks = [];
 let mainSoundtrack;
-
 
 function loadAttributes() {
   attributes = Object.keys(questions).length;
@@ -50,28 +50,39 @@ function preload() {
 function setup() {
   
   createCanvas(windowWidth, windowHeight);
-  mountain = new Mountain(0);
   gui = createGui();
-  createGuiElements();
+  //createGuiElements();
+
   blob = new Blob(width / 2, height / 2 - 60, 50);
   blob.addRings();
 }
 
 function draw() {
   background(0);
-  stroke(255);
-  fill(255, 70);
   textSize(34);
 
-  //blob.radius = rSlider.val;
-  blob.layers = lvl;
-  //console.log("key index: ", keyIndex, "xCount:",blob.xCount)
-  blob.draw();
+  blob.layers = currentLvl;
 
   if (scene == 0) {
-    
-    
+    blob.draw();
     characterCreation();
+  }
+
+  if (scene == 1) {
+    push();
+    textSize(20);
+    text("Current LvL: " + currentLvl, 40, 50);
+    text("Humor: " + blob.player.attributes['humor'], 40, 80);
+    text("Empathy: " + blob.player.attributes['empathy'], 40, 110);
+    text("Optimism: " + blob.player.attributes['optimism'], 40, 140);
+    text("Ambition: " + blob.player.attributes['ambition'], 40, 170);
+    text("Creativity: " + blob.player.attributes['creativity'], 40, 200);
+
+    if (blob.goals.length === 0) {
+      blob.createGoals();
+    }
+    blob.draw();
+    blob.goals[score].display();
   }
 
   // Main stage
@@ -88,26 +99,6 @@ function draw() {
 }
 
 function createGuiElements() {
-  rSlider = createSlider(
-    "Radius",
-    windowWidth - sliderW - 20,
-    20,
-    sliderW,
-    sliderH,
-    10,
-    80
-  );
-  rSlider.val = 20;
-  layerSlider = createSlider(
-    "Layers",
-    windowWidth - sliderW - 20,
-    20 + sliderH,
-    sliderW,
-    sliderH,
-    1,
-    30
-  );
-  layerSlider.val = 1;
   skipButton = createButton(
     "Next",
     windowWidth - buttonW - 40,
