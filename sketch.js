@@ -20,6 +20,10 @@ let questions;
 let buttons = [];
 let score = 0;
 let goalNumber = 3;
+let introAmbiences;
+let currentAmbience;
+let characterSoundtracks = [];
+let mainSoundtrack;
 
 function loadAttributes() {
   attributes = Object.keys(questions).length;
@@ -27,9 +31,24 @@ function loadAttributes() {
 
 function preload() {
   questions = loadJSON("assets/questions.json", (callback = loadAttributes));
+  //loading all the ambient sounds in this array
+  introAmbiences = new Tone.Players({
+    amb1 : "./assets/sounds/introAmbience/1.mp3", amb2 : "./assets/sounds/introAmbience/2.mp3",
+    amb3 : "./assets/sounds/introAmbience/3.mp3", amb4 : "./assets/sounds/introAmbience/4.mp3",
+    amb5: "./assets/sounds/introAmbience/5.mp3"
+  }).toDestination();
+
+  currentAmbience = new Tone.Player("./assets/sounds/introAmbience/1.mp3").toDestination();
+  currentAmbience.autostart = true;
+
+  //loading main soundtrack
+  mainSoundtrack = new Tone.Player("./assets/sounds/soundtracks/mainSoundtrack.mp3").toDestination();
+  mainSoundtrack.autostart = true;
+
 }
 
 function setup() {
+  
   createCanvas(windowWidth, windowHeight);
   gui = createGui();
   //createGuiElements();
@@ -67,9 +86,13 @@ function draw() {
   }
 
   // Main stage
-
+  if(scene == 1){
+    
+    
+  }
   // Isometric stage
   if (scene == 2) {
+    
     blob.x = windowWidth / 4;
     blob.y = windowHeight / 2;
   }
