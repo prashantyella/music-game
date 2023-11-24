@@ -6,7 +6,7 @@ class SurveyOption {
     this.y = y;
     this.player = player;
 
-    this.sprite = createButton(content, x, y);
+    this.sprite = createButton(content, x, y, content.length*12, 35);
     this.sprite.onPress = this.selectOption.bind(this);
   }
 
@@ -19,10 +19,13 @@ class SurveyOption {
       fill(100);
       rect(20, windowHeight - 280, windowWidth - 40, 280, 10);
       pop();
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].sprite.visible = false;
+      }
       buttons = [];
       if (currentLvl == attributes) {
         // End character creation
-        scene = 1;
+        scene += 1;
       }
     }
   }

@@ -12,13 +12,15 @@ let sliderW = 200;
 let sliderH = 32;
 let buttonW = 100;
 let buttonH = 40;
-let currentLvl = 1;
 let lastLvl = 0;
+let currentLvl = 0;
 let ringsPerLvl = 5;
 let attributes;
 let maxAttribute;
 let scene = 0;
 let questions;
+let lessons;
+let startButton;
 let buttons = [];
 let score = 0;
 let goalNumber = 3;
@@ -33,6 +35,8 @@ function loadAttributes() {
 
 function preload() {
   questions = loadJSON("assets/questions.json", (callback = loadAttributes));
+  lessons = loadJSON("assets/lessons.json");
+  
   //loading all the ambient sounds in this array
   introAmbiences = new Tone.ToneAudioBuffers({
     amb1 : "./assets/sounds/introAmbience/1.mp3", amb2 : "./assets/sounds/introAmbience/2.mp3",
@@ -61,7 +65,9 @@ function preload() {
 function setup() {
   
   createCanvas(windowWidth, windowHeight);
+  textSize(34);
   gui = createGui();
+
   //createGuiElements();
   if(mainSoundtrack.loaded){
     console.log("loaded soundtrack")
@@ -69,6 +75,8 @@ function setup() {
   }
   blob = new Blob(width / 2, height / 2 - 60, 50);
   blob.addRings();
+  background(0);
+  startButton = createToggle('Start', windowWidth/2, windowHeight/2, 200, 100);
   
 }
 
@@ -77,22 +85,28 @@ function getCurrentAmbience(){
   let path = "amb"+str(currentLvl);
   console.log("path:",path)
   return path;
-  
+
 }
 
 function draw() {
-  background(0);
-  textSize(34);
+  if (scene === 0) {
+    startScreen();
+  }
 
-  blob.layers = currentLvl;
+  if (scene > 0) {
+    background(0);
+    blob.layers = currentLvl;
+  }
 
-  if (scene == 0) {
+  if (scene == 1) {
     blob.draw();
     //playCurrentAmbience();
     characterCreation();
   }
+  
+  // Main stage
+  if (scene == 2) {
 
-  if (scene == 1) {
     if(mainSoundtrack.state=="started"){
 
       mainSoundtrack.stop();
@@ -114,16 +128,11 @@ function draw() {
       blob.createGoals();
     }
     blob.draw();
-    blob.goals[score].display();
-  }
 
-  
-  
-  // Isometric stage
-  if (scene == 2) {
     
-    blob.x = windowWidth / 4;
-    blob.y = windowHeight / 2;
+  }
+  //blob.goals[score].display();
+
   }
 }
 
