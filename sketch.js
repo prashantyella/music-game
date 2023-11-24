@@ -13,8 +13,10 @@ let sliderH = 32;
 let buttonW = 100;
 let buttonH = 40;
 let currentLvl = 1;
+let lastLvl = 0;
 let ringsPerLvl = 5;
 let attributes;
+let maxAttribute;
 let scene = 0;
 let questions;
 let buttons = [];
@@ -32,17 +34,26 @@ function loadAttributes() {
 function preload() {
   questions = loadJSON("assets/questions.json", (callback = loadAttributes));
   //loading all the ambient sounds in this array
-  introAmbiences = new Tone.Players({
+  introAmbiences = new Tone.ToneAudioBuffers({
     amb1 : "./assets/sounds/introAmbience/1.mp3", amb2 : "./assets/sounds/introAmbience/2.mp3",
     amb3 : "./assets/sounds/introAmbience/3.mp3", amb4 : "./assets/sounds/introAmbience/4.mp3",
     amb5: "./assets/sounds/introAmbience/5.mp3"
-  }).toDestination();
-
-  currentAmbience = new Tone.Player("./assets/sounds/introAmbience/1.mp3").toDestination();
-  currentAmbience.autostart = true;
+  },()=>{
+    console.log("Ambience Buffer Loaded");
+    currentAmbience = new Tone.Player().toDestination();
+    currentAmbience.buffer = introAmbiences.get("amb1");
+    currentAmbience.fadeOut = 1;
+    currentAmbience.fadeIn = 1;
+    
+    currentAmbience.start();
+  });
+  
+  //currentAmbience.autostart = true;
 
   //loading main soundtrack
-  mainSoundtrack = new Tone.Player("./assets/sounds/soundtracks/mainSoundtrack.mp3").toDestination();
+  mainSoundtrack = new Tone.Player({url: "./assets/sounds/soundtracks/mainSoundtrack.mp3",loop: true}).toDestination();
+  mainSoundtrack.fadeOut = 1;
+  mainSoundtrack.fadeIn = 1;
   mainSoundtrack.autostart = true;
 
 }
@@ -52,9 +63,21 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   gui = createGui();
   //createGuiElements();
-
+  if(mainSoundtrack.loaded){
+    console.log("loaded soundtrack")
+    mainSoundtrack.start();
+  }
   blob = new Blob(width / 2, height / 2 - 60, 50);
   blob.addRings();
+  
+}
+
+function getCurrentAmbience(){
+  console.log("Current Level:",currentLvl)
+  let path = "amb"+str(currentLvl);
+  console.log("path:",path)
+  return path;
+  
 }
 
 function draw() {
@@ -65,10 +88,19 @@ function draw() {
 
   if (scene == 0) {
     blob.draw();
+    //playCurrentAmbience();
     characterCreation();
   }
 
   if (scene == 1) {
+    if(mainSoundtrack.state=="started"){
+
+      mainSoundtrack.stop();
+    }
+    if(currentAmbience.state=="started"){
+
+      currentAmbience.stop();
+    }
     push();
     textSize(20);
     text("Current LvL: " + currentLvl, 40, 50);
@@ -85,11 +117,8 @@ function draw() {
     blob.goals[score].display();
   }
 
-  // Main stage
-  if(scene == 1){
-    
-    
-  }
+  
+  
   // Isometric stage
   if (scene == 2) {
     
@@ -107,3 +136,31 @@ function createGuiElements() {
     buttonH
   );
 }
+
+function keyPressed(){
+ 
+}
+
+function mousePressed(){
+  if(scene==0&&currentLvl>lastLvl){
+    lastLvl = currentLvl;
+    let path = "amb"+str(currentLvl);
+    currentAmbience.buffer = introAmbiences.get(path,currentAmbience.start());
+
+    //currentAmbience.start();
+  }
+  else if(scene==1){
+    //var tempAttributes = blob.player.attributes;
+    //console.log(blob.player.attributes)
+    //console.log(maxAttribute)
+    //tempAttributes.sort();
+    //maxAttribute = blob.player.attributes.maxKey();
+    console.log(maxAttribute);
+    switch(maxAttribute){
+      case 'humor':
+
+    }
+  }
+}
+
+

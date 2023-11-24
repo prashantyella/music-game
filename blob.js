@@ -204,7 +204,7 @@ class Blob {
           fill(216,34,41)
           //this.regenRate = -this.currentRing*(0.001);
         }
-        console.log("Health level:",this.healthLvl)
+        //console.log("Health level:",this.healthLvl)
         rect(500,-300,this.healthLvl,20)
         pop()
       }
