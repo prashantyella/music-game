@@ -32,8 +32,7 @@ class Blob {
     this.goals = [];
     this.healthMax = 100;
     this.healthLvl = 100;
-    this.regenRate = 0.5; 
-
+    this.regenRate = 0.5;
   }
 
   addPaths(n) {
@@ -106,8 +105,10 @@ class Blob {
   }
 
   createGoals() {
-    console.log('create goal!');
-    this.goals.push(new Goal(1, 0, this, "humor"));
+    console.log("create goals!");
+    this.goals.push(new Goal(1, 0, this, "love"));
+    this.goals.push(new Goal(2, 100, this, "war"));
+    this.goals.push(new Goal(3, 100, this, "art"));
   }
 
   draw() {
@@ -176,43 +177,39 @@ class Blob {
       }
     }
 
-    // Display player if scene > 0
-    if (scene > 0) {
+    // Display player if scene > 1
+    if (scene > 1) {
+      this.goals[score].display();
       this.player.display(this.rings[this.currentRing], this.keyIndex);
 
       //health bar
-      if(this.currentRing>0){
-        
-        this.regenRate = -this.currentRing*(0.05);
-      }
-      else{
+      if (this.currentRing > 0) {
+        this.regenRate = -this.currentRing * 0.05;
+      } else {
         this.regenRate = 0.1;
       }
-      if(this.healthLvl>0){
-
+      if (this.healthLvl > 0) {
         push();
         noFill();
         stroke(255);
-        rect(500,-300,this.healthMax,20)
+        rect(500, -300, this.healthMax, 20);
         pop();
-        push()
-        noStroke()
-        fill(144,238,144)
+        push();
+        noStroke();
+        fill(144, 238, 144);
         this.healthLvl += this.regenRate;
-        this.healthLvl = min(this.healthMax,this.healthLvl)
-        if(this.healthLvl<20){
-          fill(216,34,41)
+        this.healthLvl = min(this.healthMax, this.healthLvl);
+        if (this.healthLvl < 20) {
+          fill(216, 34, 41);
           //this.regenRate = -this.currentRing*(0.001);
         }
-        console.log("Health level:",this.healthLvl)
-        rect(500,-300,this.healthLvl,20)
-        pop()
-      }
-      else{
-        noLoop();
+        //console.log("Health level:", this.healthLvl);
+        rect(500, -300, this.healthLvl, 20);
+        pop();
+      } else {
+        //noLoop();
         //stop or reset game here
       }
-
     }
 
     for (var i = 0; i < this.paths.length; i++) {
@@ -258,7 +255,6 @@ class Path {
 
     // Display start and end points of the path
     noStroke();
-    fill(30);
     if (this.selected === true) {
       fill(200, 80, 20, 14);
       for (let i = 0; i < 20; i++) {
@@ -269,7 +265,7 @@ class Path {
       ellipse(startX, startY, this.thickness * 3);
       ellipse(endX, endY, this.thickness * 3);
     } else {
-      fill(50);
+      fill(200);
       ellipse(startX, startY, this.thickness * 3);
       ellipse(endX, endY, this.thickness * 3);
     }
@@ -349,39 +345,88 @@ class Ring {
 }
 
 class Goal {
-  constructor(ringIndex, keyIndex, blob, att) {
+  constructor(ringIndex, keyIndex, blob, topic) {
     this.blob = blob;
     this.player = blob.player;
-    console.log('created goal with player: ' + this.player);
     this.active = true;
     this.ring = this.blob.rings[ringIndex];
     this.position = keyIndex;
-    this.att = att;
+    this.attributes = lessons[topic].attributes;
+    this.r = 5;
+  }
+
+  checkCollision() {
+    let distance = dist(
+      this.ring.xCoordinates[keyIndex],
+      this.ring.yCoordinates[keyIndex],
+      this.player.x,
+      this.player.y
+    );
+
+    if (distance < this.r * 5) {
+      noStroke();
+      fill(200);
+      rect(
+        this.ring.xCoordinates[keyIndex],
+        this.ring.yCoordinates[keyIndex],
+        this.r
+      );
+      console.log("geting close!");
+    }
+
+    if (distance < this.r) {
+      console.log("Collision!!!");
+      this.capture();
+    }
+  }
+
+  addAttributes() {
+    if (this.active) {
+      console.log('add attributes: ', this.attributes);
+      for (const att in this.attributes) {
+        console.log(att);
+        this.player.attributes[att] += this.attributes[att];
+        console.log(this.player.attributes);
+      }
+    }
   }
 
   capture() {
     score += 1;
-    this.player.attributes[this.att] += 1;
+    this.addAttributes();
+    this.showLesson();
+  }
+
+  showLesson() {
+    // Display lesson contents
+
+    // Increase level
+    currentLvl += 1;
     this.active = false;
+    console.log("Turn goal off");
   }
 
   display() {
     if (this.active) {
       push();
-      translate(this.blob.x, this.blob.y);
       noStroke();
-      fill(255);
-      ellipse(
+      fill(5, 5, 5, 15);
+      for (let i = 0; i < this.r * 5; i++) {
+        ellipse(
+          this.ring.xCoordinates[keyIndex],
+          this.ring.yCoordinates[keyIndex],
+          i * 2
+        );
+      }
+      fill(0);
+      rect(
         this.ring.xCoordinates[keyIndex],
         this.ring.yCoordinates[keyIndex],
-        5
+        this.r
       );
-      fill(5, 5, 5, 12);
-      for (let i = 0; i < 40; i++) {
-        ellipse(this.ring.xCoordinates[keyIndex],
-          this.ring.yCoordinates[keyIndex], i * 2);
-      }
       pop();
+
+      this.checkCollision();
     }
   }
 }

@@ -1,3 +1,14 @@
+function startScreen() {
+  drawGui();
+  if (startButton.isPressed) {
+    if (scene === 0) {
+      scene +=1;
+      startButton.visible = false;
+    }
+  }
+}
+
+
 function characterCreation() {
   fill(255);
   text(currentLvl, 40, 50);

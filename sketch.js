@@ -12,11 +12,13 @@ let sliderW = 200;
 let sliderH = 32;
 let buttonW = 100;
 let buttonH = 40;
-let currentLvl = 1;
+let currentLvl = 0;
 let ringsPerLvl = 5;
 let attributes;
 let scene = 0;
 let questions;
+let lessons;
+let startButton;
 let buttons = [];
 let score = 0;
 let goalNumber = 3;
@@ -31,6 +33,8 @@ function loadAttributes() {
 
 function preload() {
   questions = loadJSON("assets/questions.json", (callback = loadAttributes));
+  lessons = loadJSON("assets/lessons.json");
+  
   //loading all the ambient sounds in this array
   introAmbiences = new Tone.Players({
     amb1 : "./assets/sounds/introAmbience/1.mp3", amb2 : "./assets/sounds/introAmbience/2.mp3",
@@ -50,25 +54,32 @@ function preload() {
 function setup() {
   
   createCanvas(windowWidth, windowHeight);
+  textSize(34);
   gui = createGui();
-  //createGuiElements();
 
   blob = new Blob(width / 2, height / 2 - 60, 50);
   blob.addRings();
+  background(0);
+  startButton = createToggle('Start', windowWidth/2, windowHeight/2, 200, 100);
 }
 
 function draw() {
-  background(0);
-  textSize(34);
+  if (scene === 0) {
+    startScreen();
+  }
 
-  blob.layers = currentLvl;
+  if (scene > 0) {
+    background(0);
+    blob.layers = currentLvl;
+  }
 
-  if (scene == 0) {
+  if (scene == 1) {
     blob.draw();
     characterCreation();
   }
 
-  if (scene == 1) {
+  // Main stage
+  if (scene == 2) {
     push();
     textSize(20);
     text("Current LvL: " + currentLvl, 40, 50);
@@ -82,19 +93,7 @@ function draw() {
       blob.createGoals();
     }
     blob.draw();
-    blob.goals[score].display();
-  }
-
-  // Main stage
-  if(scene == 1){
-    
-    
-  }
-  // Isometric stage
-  if (scene == 2) {
-    
-    blob.x = windowWidth / 4;
-    blob.y = windowHeight / 2;
+    //blob.goals[score].display();
   }
 }
 

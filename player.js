@@ -9,16 +9,19 @@ class Player {
       'creativity': 0
     }
     this.hp = 100;
-    console.log('created player');
+    this.x;
+    this.y;
   }
 
   display(ring, keyIndex) {
     push();
     noStroke();
     fill(255);
+    this.x = ring.xCoordinates[keyIndex];
+    this.y = ring.yCoordinates[keyIndex];
     ellipse(
-      ring.xCoordinates[keyIndex],
-      ring.yCoordinates[keyIndex],
+      this.x,
+      this.y,
       this.playerSize
     );
     fill(255, 220, 200, 6);
