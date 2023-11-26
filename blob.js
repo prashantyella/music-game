@@ -109,6 +109,7 @@ class Blob {
     this.goals.push(new Goal(1, 0, this, "love"));
     this.goals.push(new Goal(2, 100, this, "war"));
     this.goals.push(new Goal(3, 100, this, "art"));
+    
   }
 
   draw() {
@@ -404,8 +405,25 @@ class Goal {
 
     // Increase level
     currentLvl += 1;
+    this.updateSoundtrack();
     this.active = false;
     console.log("Turn goal off");
+  }
+
+  updateSoundtrack(){
+    if(maxAttribute!=null){
+      var path = str(maxAttribute) + str(currentLvl-4)
+      characterSoundtrack.buffer = characterSoundtracks.get(path); 
+      console.log("path:", path);
+      if(characterSoundtrack.state == "started"){
+        characterSoundtrack.stop();
+      }
+      if(characterSoundtrack.loaded){
+        characterSoundtrack.start();
+        console.log("Now Playing:",path);
+      }
+    }
+    
   }
 
   display() {
