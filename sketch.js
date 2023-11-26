@@ -161,9 +161,11 @@ function draw() {
     blob.draw();
 
     
+
     
     
   }
+
   //blob.goals[score].display();
 
   }
