@@ -28,5 +28,6 @@ class SurveyOption {
         scene += 1;
       }
     }
+    dialogueOption += 1;
   }
 }
