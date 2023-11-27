@@ -183,8 +183,8 @@ class Blob {
       }
     }
 
-    // Display player if scene > 1
-    if (scene > 1) {
+    // Display player if scene == 2
+    if (scene == 2) {
       this.goals[score].display();
       this.player.display(this.rings[this.currentRing], this.keyIndex);
 
@@ -437,7 +437,13 @@ class Goal {
     this.updateSoundtrack();
     this.active = false;
     this.blob.currentRing = 0;
-    this.blob.createGoal();
+
+    if (this.blob.goals.length < 3) {
+      this.blob.createGoal();
+    } else {
+      console.log('end!!')
+      scene += 1;
+    }
     console.log("Turn goal off");
   }
 
