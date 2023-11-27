@@ -1,4 +1,5 @@
 function startScreen() {
+  background(backgroundImg);
   drawGui();
   if (startButton.isPressed) {
     if (scene === 0) {
@@ -19,7 +20,7 @@ function characterCreation() {
   let question = questions["question" + currentLvl];
   let answers = question["answers"];
 
-  text(question["content"], 40, windowHeight - 240);
+  text(question["content"], 60, windowHeight - 220);
 
   let i = 0;
   if (buttons.length < 5) {
@@ -28,8 +29,8 @@ function characterCreation() {
         new SurveyOption(
           answers[answer],
           answer,
-          40,
-          windowHeight - 60 - buttonH * i,
+          60,
+          windowHeight - 50 - buttonH * i,
           blob.player
         )
       );

@@ -24,7 +24,7 @@ class Blob {
     this.ringDistance = 40;
     this.rings = [];
     this.paths = [];
-    this.player = new Player(12);
+    this.player = new Player(14);
     this.xCount = 0;
     this.yCount = 0;
     this.keyIndex = 0;
@@ -32,7 +32,7 @@ class Blob {
     this.goals = [];
     this.healthMax = 100;
     this.healthLvl = 100;
-    this.regenRate = 0.5;
+    this.regenRate = 1;
   }
 
   addPaths(n) {
@@ -104,19 +104,24 @@ class Blob {
     }
   }
 
-  createGoals() {
-    console.log("create goals!");
-    this.goals.push(new Goal(1, 0, this, "love"));
-    this.goals.push(new Goal(2, 100, this, "war"));
-    this.goals.push(new Goal(3, 100, this, "art"));
-    
+  createGoal() {
+    this.goals.push(
+      new Goal(
+        this.rings.length - 1,
+        floor(random(126)),
+        this,
+        Object.keys(lessons)[this.goals.length]
+      )
+    );
+
   }
 
   draw() {
     push();
     translate(this.x, this.y);
-    fill(222, 239, 231, 5);
-    stroke(255);
+    //fill(222, 239, 231, 0);
+    noFill();
+    stroke(primaryColor);
     strokeWeight(1);
     this.phase += this.phaseRate;
     this.zoff += this.zoffRate;
@@ -130,8 +135,8 @@ class Blob {
 
     // Update shape of each ring
     for (let i = 0; i < this.rings.length; i++) {
-      this.rings[i].phase = this.phase;
-      this.rings[i].zoff = this.zoff;
+      this.rings[i].phase = this.phase; // + 10 * i;
+      this.rings[i].zoff = this.zoff; // + 10 * i;
       this.rings[i].blobiness = this.blobiness;
       this.rings[i].maxNoise = this.maxNoise;
       this.rings[i].display();
@@ -185,34 +190,30 @@ class Blob {
 
       //health bar
       if (this.currentRing > 0) {
-        this.regenRate = -this.currentRing * 0.05;
+        this.regenRate = -this.currentRing * 0.1;
       } else {
-        this.regenRate = 0.1;
+        this.regenRate = 1;
       }
-      if (this.healthLvl > 0) {
-        push();
-        noFill();
-        stroke(255);
-        rect(500, -300, this.healthMax, 20);
-        pop();
-        push();
-        noStroke();
-        fill(144, 238, 144);
-        this.healthLvl += this.regenRate;
-        this.healthLvl = min(this.healthMax, this.healthLvl);
-        if (this.healthLvl < 20) {
-          fill(216, 34, 41);
-          //this.regenRate = -this.currentRing*(0.001);
-        }
-
-        //console.log("Health level:", this.healthLvl);
-        rect(500, -300, this.healthLvl, 20);
-        pop();
-      } else {
-        //noLoop();
-
-        //stop or reset game here
+      if (this.healthLvl <= 0) {
+        this.currentRing = 0;
       }
+      push();
+      noFill();
+      stroke(255);
+      rect(500, -300, this.healthMax, 20);
+      pop();
+      push();
+      noStroke();
+      fill(secondaryColor);
+      this.healthLvl += this.regenRate;
+      this.healthLvl = min(this.healthMax, this.healthLvl);
+      if (this.healthLvl < 20) {
+        fill(216, 34, 41);
+        //this.regenRate = -this.currentRing*(0.001);
+      }
+
+      rect(500, -300, this.healthLvl, 20);
+      pop();
     }
 
     for (var i = 0; i < this.paths.length; i++) {
@@ -249,7 +250,7 @@ class Path {
     let endY = this.endRing.yCoordinates[this.index];
 
     push();
-    stroke(255);
+    stroke(this.color);
     strokeWeight(this.thickness);
     beginShape(LINES);
     vertex(startX, startY);
@@ -259,7 +260,7 @@ class Path {
     // Display start and end points of the path
     noStroke();
     if (this.selected === true) {
-      fill(200, 80, 20, 14);
+      fill(250, 170, 170, 20);
       for (let i = 0; i < 20; i++) {
         ellipse(startX, startY, i * 3);
         ellipse(endX, endY, i * 3);
@@ -268,7 +269,7 @@ class Path {
       ellipse(startX, startY, this.thickness * 3);
       ellipse(endX, endY, this.thickness * 3);
     } else {
-      fill(200);
+      fill(255);
       ellipse(startX, startY, this.thickness * 3);
       ellipse(endX, endY, this.thickness * 3);
     }
@@ -291,13 +292,41 @@ class Ring {
     this.zoffRate = 0.01;
     this.blobiness = blobiness;
     this.main = main;
+    this.thickness = 6;
+    this.secondaryThickness = random(1, 2);
 
     if (this.main === true) {
       this.minorRings = [];
       for (let i = 0; i < ringsPerLvl; i++) {
-        this.minorRings.push(
-          new Ring(id, radius - 6 * i, phase, zoff, blobiness, maxNoise, false)
-        );
+        if (this.id === 1 || i === ringsPerLvl - 1) {
+          push();
+          fill(255);
+          console.log("id 1!!");
+          this.minorRings.push(
+            new Ring(
+              id,
+              radius - 4 * i,
+              phase,
+              zoff,
+              blobiness,
+              maxNoise,
+              false
+            )
+          );
+          pop();
+        } else {
+          this.minorRings.push(
+            new Ring(
+              id,
+              radius - 4 * i,
+              phase,
+              zoff,
+              blobiness,
+              maxNoise,
+              false
+            )
+          );
+        }
       }
     }
   }
@@ -310,9 +339,12 @@ class Ring {
     this.xCoordinates = [];
     this.yCoordinates = [];
     push();
+
     translate(this.x, this.y);
     if (this.main === true) {
-      strokeWeight(5);
+      strokeWeight(this.thickness);
+    } else {
+      strokeWeight(this.secondaryThickness);
     }
     beginShape();
     for (var a = 0; a < TWO_PI; a += 0.05) {
@@ -349,6 +381,7 @@ class Ring {
 
 class Goal {
   constructor(ringIndex, keyIndex, blob, topic) {
+    console.log("index: ", keyIndex);
     this.blob = blob;
     this.player = blob.player;
     this.active = true;
@@ -360,21 +393,19 @@ class Goal {
 
   checkCollision() {
     let distance = dist(
-      this.ring.xCoordinates[keyIndex],
-      this.ring.yCoordinates[keyIndex],
+      this.ring.xCoordinates[this.position],
+      this.ring.yCoordinates[this.position],
       this.player.x,
       this.player.y
     );
-
     if (distance < this.r * 5) {
       noStroke();
       fill(200);
       rect(
-        this.ring.xCoordinates[keyIndex],
-        this.ring.yCoordinates[keyIndex],
+        this.ring.xCoordinates[this.position],
+        this.ring.yCoordinates[this.position],
         this.r
       );
-      console.log("geting close!");
     }
 
     if (distance < this.r) {
@@ -385,11 +416,9 @@ class Goal {
 
   addAttributes() {
     if (this.active) {
-      console.log('add attributes: ', this.attributes);
+      console.log("add attributes: ", this.attributes);
       for (const att in this.attributes) {
-        console.log(att);
         this.player.attributes[att] += this.attributes[att];
-        console.log(this.player.attributes);
       }
     }
   }
@@ -407,6 +436,8 @@ class Goal {
     currentLvl += 1;
     this.updateSoundtrack();
     this.active = false;
+    this.blob.currentRing = 0;
+    this.blob.createGoal();
     console.log("Turn goal off");
   }
 
@@ -430,18 +461,18 @@ class Goal {
     if (this.active) {
       push();
       noStroke();
-      fill(5, 5, 5, 15);
-      for (let i = 0; i < this.r * 5; i++) {
+      fill(236, 170, 1, 17);
+      for (let i = 0; i < this.r * 7; i++) {
         ellipse(
-          this.ring.xCoordinates[keyIndex],
-          this.ring.yCoordinates[keyIndex],
+          this.ring.xCoordinates[this.position],
+          this.ring.yCoordinates[this.position],
           i * 2
         );
       }
-      fill(0);
-      rect(
-        this.ring.xCoordinates[keyIndex],
-        this.ring.yCoordinates[keyIndex],
+      fill(255);
+      ellipse(
+        this.ring.xCoordinates[this.position],
+        this.ring.yCoordinates[this.position],
         this.r
       );
       pop();

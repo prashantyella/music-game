@@ -1,3 +1,5 @@
+let backgroundImg;
+let mainFont;
 let gui;
 let blob;
 let rSlider;
@@ -11,10 +13,10 @@ let keyIndex = 0;
 let sliderW = 200;
 let sliderH = 32;
 let buttonW = 100;
-let buttonH = 40;
+let buttonH = 36;
 let lastLvl = -1;
 let currentLvl = 0;
-let ringsPerLvl = 5;
+let ringsPerLvl = 8;
 let attributes;
 let maxAttribute = null;
 let scene = 0;
@@ -25,6 +27,10 @@ let buttons = [];
 let score = 0;
 let goalNumber = 3;
 let introAmbiences;
+let characterSoundtracks = [];
+let backgroundColor = 'black'
+let primaryColor = '#904E4A'
+let secondaryColor = '#51724F'
 let humorSoundtracks;
 let empathySoundtracks;
 let optimismSoundtracks;
@@ -39,6 +45,8 @@ function loadAttributes() {
 }
 
 function preload() {
+  backgroundImg = loadImage("assets/main_screen.jpg")
+  mainFont = loadFont("assets/fonts/DMMono-Medium.ttf")
   questions = loadJSON("assets/questions.json", (callback = loadAttributes));
   lessons = loadJSON("assets/lessons.json");
   mainSoundtrack.fadeOut = 3;
@@ -90,8 +98,10 @@ function preload() {
 function setup() {
   
   createCanvas(windowWidth, windowHeight);
+  textFont(mainFont);
   textSize(34);
   gui = createGui();
+  gui.setStrokeWeight(0);
 
   //createGuiElements();
   
@@ -100,8 +110,9 @@ function setup() {
   }
   blob = new Blob(width / 2, height / 2 - 60, 50);
   blob.addRings();
-  background(0);
-  startButton = createToggle('Start', windowWidth/2, windowHeight/2, 200, 100);
+  background(backgroundColor);
+  
+  startButton = createToggle('Start', windowWidth/2 - 100, 580, 200, 100);
   
 }
 
@@ -113,7 +124,7 @@ function draw() {
   }
 
   if (scene > 0) {
-    background(0);
+    background(backgroundColor);
     blob.layers = currentLvl;
   }
 
@@ -142,7 +153,7 @@ function draw() {
     text("Creativity: " + blob.player.attributes['creativity'], 40, 200);
 
     if (blob.goals.length === 0) {
-      
+      blob.createGoal();
       if(maxAttribute == null){
         maxAttribute = getMaxAttribute(blob.player.attributes); //get trait with highest score
         var path = str(maxAttribute) + str(currentLvl-4)
@@ -154,22 +165,14 @@ function draw() {
           console.log("Now Playing:", path);
         }
 
-        blob.createGoals();
-
       }
     }
     blob.draw();
-
-    
-
-    
     
   }
+  gui.setFont(mainFont);
 
-  //blob.goals[score].display();
-
-  }
-
+}
 
 function createGuiElements() {
   skipButton = createButton(
@@ -181,9 +184,6 @@ function createGuiElements() {
   );
 }
 
-function keyPressed(){
- 
-}
 
 function mousePressed(){
   if(scene==0&&currentLvl>lastLvl){
