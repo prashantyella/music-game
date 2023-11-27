@@ -113,6 +113,7 @@ class Blob {
         Object.keys(lessons)[this.goals.length]
       )
     );
+
   }
 
   draw() {
@@ -433,10 +434,27 @@ class Goal {
 
     // Increase level
     currentLvl += 1;
+    this.updateSoundtrack();
     this.active = false;
     this.blob.currentRing = 0;
     this.blob.createGoal();
     console.log("Turn goal off");
+  }
+
+  updateSoundtrack(){
+    if(maxAttribute!=null){
+      var path = str(maxAttribute) + str(currentLvl-4)
+      characterSoundtrack.buffer = characterSoundtracks.get(path); 
+      console.log("path:", path);
+      if(characterSoundtrack.state == "started"){
+        characterSoundtrack.stop();
+      }
+      if(characterSoundtrack.loaded){
+        characterSoundtrack.start();
+        console.log("Now Playing:",path);
+      }
+    }
+    
   }
 
   display() {
