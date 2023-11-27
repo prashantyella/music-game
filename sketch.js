@@ -1,3 +1,5 @@
+let backgroundImg;
+let mainFont;
 let gui;
 let blob;
 let rSlider;
@@ -11,10 +13,10 @@ let keyIndex = 0;
 let sliderW = 200;
 let sliderH = 32;
 let buttonW = 100;
-let buttonH = 40;
+let buttonH = 36;
 let lastLvl = 0;
 let currentLvl = 0;
-let ringsPerLvl = 5;
+let ringsPerLvl = 8;
 let attributes;
 let maxAttribute;
 let scene = 0;
@@ -28,12 +30,17 @@ let introAmbiences;
 let currentAmbience;
 let characterSoundtracks = [];
 let mainSoundtrack;
+let backgroundColor = 'black'
+let primaryColor = '#904E4A'
+let secondaryColor = '#51724F'
 
 function loadAttributes() {
   attributes = Object.keys(questions).length;
 }
 
 function preload() {
+  backgroundImg = loadImage("assets/main_screen.jpg")
+  mainFont = loadFont("assets/fonts/DMMono-Medium.ttf")
   questions = loadJSON("assets/questions.json", (callback = loadAttributes));
   lessons = loadJSON("assets/lessons.json");
   
@@ -65,8 +72,10 @@ function preload() {
 function setup() {
   
   createCanvas(windowWidth, windowHeight);
+  textFont(mainFont);
   textSize(34);
   gui = createGui();
+  gui.setStrokeWeight(0);
 
   //createGuiElements();
   if(mainSoundtrack.loaded){
@@ -75,8 +84,9 @@ function setup() {
   }
   blob = new Blob(width / 2, height / 2 - 60, 50);
   blob.addRings();
-  background(0);
-  startButton = createToggle('Start', windowWidth/2, windowHeight/2, 200, 100);
+  background(backgroundColor);
+  
+  startButton = createToggle('Start', windowWidth/2 - 100, 580, 200, 100);
   
 }
 
@@ -94,7 +104,7 @@ function draw() {
   }
 
   if (scene > 0) {
-    background(0);
+    background(backgroundColor);
     blob.layers = currentLvl;
   }
 
@@ -108,11 +118,9 @@ function draw() {
   if (scene == 2) {
 
     if(mainSoundtrack.state=="started"){
-
       mainSoundtrack.stop();
     }
     if(currentAmbience.state=="started"){
-
       currentAmbience.stop();
     }
     push();
@@ -125,14 +133,13 @@ function draw() {
     text("Creativity: " + blob.player.attributes['creativity'], 40, 200);
 
     if (blob.goals.length === 0) {
-      blob.createGoals();
+      blob.createGoal();
     }
     blob.draw();
-
     
-  //blob.goals[score].display();
-
   }
+  gui.setFont(mainFont);
+
 }
 
 function createGuiElements() {
@@ -145,9 +152,6 @@ function createGuiElements() {
   );
 }
 
-function keyPressed(){
- 
-}
 
 function mousePressed(){
   if(scene==0&&currentLvl>lastLvl){
@@ -166,7 +170,6 @@ function mousePressed(){
     console.log(maxAttribute);
     switch(maxAttribute){
       case 'humor':
-
     }
   }
 }

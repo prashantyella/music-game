@@ -6,7 +6,7 @@ class SurveyOption {
     this.y = y;
     this.player = player;
 
-    this.sprite = createButton(content, x, y, content.length*12, 35);
+    this.sprite = createButton(content, x, y, content.length*14, 30);
     this.sprite.onPress = this.selectOption.bind(this);
   }
 

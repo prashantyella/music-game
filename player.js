@@ -16,7 +16,7 @@ class Player {
   display(ring, keyIndex) {
     push();
     noStroke();
-    fill(255);
+    fill(secondaryColor);
     this.x = ring.xCoordinates[keyIndex];
     this.y = ring.yCoordinates[keyIndex];
     ellipse(
@@ -24,8 +24,8 @@ class Player {
       this.y,
       this.playerSize
     );
-    fill(255, 220, 200, 6);
-    for (let i = 0; i < 70; i++) {
+    fill(200, 200, 255, 6);
+    for (let i = 0; i < 55; i++) {
       ellipse(ring.xCoordinates[keyIndex], ring.yCoordinates[keyIndex], i * 3);
     }
     pop();
